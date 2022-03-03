@@ -24,6 +24,7 @@ export interface RecursiveObject<T = string | number> {
 
 export interface ThemeConfig extends ColorModeOptions {
   cssVarPrefix?: string
+  localStoragePrefix?: string
 }
 
 export type ThemeTransitions = RecursiveObject & {

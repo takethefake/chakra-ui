@@ -2,7 +2,9 @@ import { __DEV__ } from "@chakra-ui/utils"
 import { ColorMode } from "./color-mode.utils"
 
 const hasSupport = () => typeof Storage !== "undefined"
-export const storageKey = "chakra-ui-color-mode"
+export const defaultStoragePrefix = "chakra"
+export const storageSuffix = "ui-color-mode"
+export const storageKey = [defaultStoragePrefix, storageSuffix].join("-")
 
 type MaybeColorMode = ColorMode | undefined
 
@@ -15,11 +17,15 @@ export interface StorageManager {
 /**
  * Simple object to handle read-write to localStorage
  */
-export const localStorageManager: StorageManager = {
+export const localStorageManager = (
+  localStoragePrefix = defaultStoragePrefix,
+): StorageManager => ({
   get(init?) {
     if (!hasSupport()) return init
     try {
-      const value = localStorage.getItem(storageKey) as MaybeColorMode
+      const value = localStorage.getItem(
+        [localStoragePrefix, storageSuffix].join("-"),
+      ) as MaybeColorMode
       return value ?? init
     } catch (error) {
       if (__DEV__) {
@@ -31,7 +37,7 @@ export const localStorageManager: StorageManager = {
   set(value) {
     if (!hasSupport()) return
     try {
-     localStorage.setItem(storageKey, value)
+      localStorage.setItem([localStoragePrefix, storageSuffix].join("-"), value)
     } catch (error) {
       if (__DEV__) {
         console.log(error)
@@ -39,7 +45,7 @@ export const localStorageManager: StorageManager = {
     }
   },
   type: "localStorage",
-}
+})
 
 /**
  * Simple object to handle read-write to cookies

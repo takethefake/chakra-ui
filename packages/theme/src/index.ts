@@ -9,6 +9,7 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
   initialColorMode: "light",
   cssVarPrefix: "chakra",
+  localStoragePrefix: "chakra",
 }
 
 export const theme = {

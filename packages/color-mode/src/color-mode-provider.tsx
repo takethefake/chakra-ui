@@ -1,6 +1,7 @@
 import { useEnvironment } from "@chakra-ui/react-env"
 import { isBrowser, noop, __DEV__ } from "@chakra-ui/utils"
 import * as React from "react"
+import { useTheme } from "@chakra-ui/system"
 import {
   addListener,
   ColorMode,
@@ -9,6 +10,7 @@ import {
   syncBodyClassName,
 } from "./color-mode.utils"
 import { localStorageManager, StorageManager } from "./storage-manager"
+import { underline } from "chalk"
 
 type ConfigColorMode = ColorMode | "system" | undefined
 export type { ColorMode, ConfigColorMode }
@@ -58,8 +60,18 @@ export function ColorModeProvider(props: ColorModeProviderProps) {
     value,
     children,
     options: { useSystemColorMode, initialColorMode },
-    colorModeManager = localStorageManager,
+    colorModeManager: propsProviderColorModeManager,
   } = props
+
+  const theme = useTheme()
+
+  const localStoragePrefix = theme?.config?.localStoragePrefix ?? undefined
+  console.log(localStoragePrefix)
+  const localStorage = localStoragePrefix
+    ? localStorageManager(localStoragePrefix)
+    : localStorageManager()
+
+  const colorModeManager = propsProviderColorModeManager ?? localStorage
 
   const defaultColorMode = initialColorMode === "dark" ? "dark" : "light"
 
